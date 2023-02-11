@@ -1,0 +1,14 @@
+const mongoose = require("mongoose");
+
+const updateSchema = new mongoose.Schema({
+  id: {
+    type: String,
+  },
+  refId: {
+    type: String,
+  },
+});
+
+let schema = mongoose.model("RequestUpdate", updateSchema);
+
+module.exports = schema;

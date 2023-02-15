@@ -9,19 +9,17 @@ import New from "./Pages/new/New";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
-            <Route path="login" element={<Login />} />
-            <Route path="User">
-              <Route index element={<List />} />
-              <Route path=":UserId" element={<Single />} />
-              <Route path="new" element={<New />} />
-            </Route>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route path="User">
+            <Route index element={<List />} />
+            <Route path=":UserId" element={<Single />} />
+            <Route path="new" element={<New />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
+        </Route>
+      </Routes>
     </div>
   );
 }

@@ -2,72 +2,84 @@ import React from "react";
 import { useState } from "react";
 import "./response.scss";
 import { DownloadOutlined } from "@ant-design/icons";
-import { Button, Divider, Radio, Space, Progress, Tag } from "antd";
+import { Button, Divider, Radio, Space, Progress, Tag, Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import Table from "react-bootstrap/Table";
-
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-
-let pageNumber = 1;
-
-const data = [
-  { data: { RefId: 205, Response: true } },
-  { data: { RefId: 206, Response: false } },
-  { data: { RefId: 207, Response: true } },
-  { data: { RefId: 208, Response: false } },
-  { data: { RefId: 209, Response: true } },
-  { data: { RefId: 205, Response: true } },
-  { data: { RefId: 206, Response: false } },
-  { data: { RefId: 207, Response: true } },
-  { data: { RefId: 208, Response: false } },
-  { data: { RefId: 209, Response: true } },
-  { data: { RefId: 205, Response: true } },
-  { data: { RefId: 206, Response: false } },
-  { data: { RefId: 207, Response: true } },
-  { data: { RefId: 208, Response: false } },
-  { data: { RefId: 209, Response: true } },
-];
-
-const Response = ({ title }) => {
-  const shoot = (y) => {
-    console.log(y);
+let response = { RefId: "", Response: "" };
+const Response = () => {
+  let test = `{
+    errors: [
+      {
+        code: "gateway.scopes.authorise",
+        title: "Unauthorised call",
+        detail:
+          "Your current grant type does not have the required permissions to fulfill this request",
+      },
+    ],
+  }
+`;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { loading, feedData } = useSelector((state) => state.feedDataState);
+  const request = feedData;
+  const showModal = () => {
+    setIsModalOpen(true);
   };
-  let x = 100;
-  let i = 205;
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const shoot = (y) => {
+    console.log(response);
+    showModal();
+  };
+
   return (
     <div className="chart">
-      <div className="title">{title}</div>
-      <div className="progress">
-      <tr className="test-td">
-                <td>...</td>
-              </tr>
-        {data.map((item) => {
-          return (
-            <div className="progressbar">
+      <div className="top">
+        <div className="title">Response</div>
+        <div className="progressbar">
+          {request.map((props, i) => (
+            <div key={i} className="progress">
               <Progress
                 type="circle"
                 percent={100}
                 width={28}
+                status={props.ResponseStatus}
                 onClick={() => {
-                  let y = { item };
-                  shoot(y, i++);
+                  let y = { ...props };
+                  response = y;
+                  shoot(y);
                 }}
               />
-              <div>
-                {() => {
-                  item;
-                }}
-              </div>
+              <div>{props.RefId} </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+        <div>
+          <Modal
+            className="scrollable-container"
+            title="Request & Response"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <p>
+              {" "}
+              <b>RefId : {response.RefId}</b>
+            </p>
+            <p>
+              <b>Response : {response.Response}</b>
+            </p>
+            <SyntaxHighlighter language="javascript" style={docco}>
+              {test}
+            </SyntaxHighlighter>
+          </Modal>
+        </div>
       </div>
     </div>
   );

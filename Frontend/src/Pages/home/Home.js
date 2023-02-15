@@ -20,7 +20,7 @@ const Home = () => {
         </div>
         <div className="charts">
           <Render />
-          <Response title="Last 6 Months (Revenue)" aspect={2 / 1} />
+          <Response aspect={2 / 1} />
         </div>
       </div>
     </div>
